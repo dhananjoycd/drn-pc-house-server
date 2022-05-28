@@ -165,6 +165,13 @@ try{
     const user = await orderCollection?.deleteOne(query);
     res.send(user);
 });
+   //delete a review By Post ID
+   app.delete('/reviews/:id', async (req,res)=>{
+    const id = req.params.id;
+    const query = {_id: ObjectId(id)};
+    const user = await reviewCollection?.deleteOne(query);
+    res.send(user);
+});
 
 
 

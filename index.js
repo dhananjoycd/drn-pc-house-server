@@ -25,6 +25,7 @@ try{
     const pcpartCollection = client.db("drnPcHouse").collection("pcparts");
     const userCollection = client.db("drnPcHouse").collection("users");
     const orderCollection = client.db("drnPcHouse").collection("orders");
+    const reviewCollection = client.db("drnPcHouse").collection("reviews");
 
 
   //creat PC Parts
@@ -48,6 +49,13 @@ try{
     res.send(result);
 });
 
+  //creat Reviews
+  app.post('/reviews', async (req,res)=>{
+    const orders = req.body;
+    const result = await reviewCollection.insertOne(orders);
+    res.send(result);
+});
+
 
   // Read all post from API
   app.get('/pcparts', async (req,res)=>{
@@ -65,6 +73,12 @@ try{
   app.get('/orders', async (req,res)=>{
     const query = {};
     const cursor = orderCollection.find(query);
+    const orders = await cursor.toArray();
+    res.send(orders);
+});
+  app.get('/reviews', async (req,res)=>{
+    const query = {};
+    const cursor = reviewCollection.find(query);
     const orders = await cursor.toArray();
     res.send(orders);
 });
@@ -87,9 +101,7 @@ try{
     const query = {_id: ObjectId(id)};
     const option = { upsert: true};
     const updateCollection = {
-        $set: { 
-            productQuantity: updateData.productQuantity,
-        }
+     $set: updateData
     };
     console.log('collection',updateCollection);
     const result = await pcpartCollection.updateOne(query,updateCollection, option);
